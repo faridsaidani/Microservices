@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-253.31033.145">
+    <data-source name="commandedb" uuid="52aa76f6-848d-4e76-a103-7ce82cbc107e">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="H2" />
+      <user-name>admin</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="paiementdb" uuid="084166e7-5c11-40d4-befc-79099c29a084">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="H2" />
+      <user-name>sa</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="cataloguedb" uuid="0842894f-6ba9-4773-8611-b6204ea3b3df">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="H2" />
+      <user-name>sa</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
