@@ -1,5 +1,8 @@
 name: CI Build and Push Images
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   push:
     branches: ["main"]
@@ -28,6 +31,12 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+
+      - name: Prepare Maven Wrapper
+        working-directory: ./${{ matrix.service }}
+        run: |
+          sed -i 's/\r$//' mvnw
+          chmod +x mvnw
 
       - name: Test and package ${{ matrix.service }}
         working-directory: ./${{ matrix.service }}
