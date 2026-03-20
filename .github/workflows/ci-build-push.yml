@@ -44,7 +44,7 @@ jobs:
 
   docker-build-push:
     needs: build-test
-    if: github.event_name == 'push' && secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != ''
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -59,23 +59,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Check Docker Hub secrets
+        id: docker_secrets
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
+            echo "has_secrets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_secrets=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Login Docker Hub
+        if: steps.docker_secrets.outputs.has_secrets == 'true'
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build image
+        if: steps.docker_secrets.outputs.has_secrets == 'true'
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.service }}
 
       - name: Push image
+        if: steps.docker_secrets.outputs.has_secrets == 'true'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
 
-  docker-secrets-missing:
-    needs: build-test
-    if: github.event_name == 'push' && (secrets.DOCKER_USERNAME == '' || secrets.DOCKER_PASSWORD == '')
-    runs-on: ubuntu-latest
-    steps:
       - name: Missing Docker Hub secrets
-        run: |
-          echo "::warning::docker-build-push skipped: configure DOCKER_USERNAME and DOCKER_PASSWORD repository secrets."
+        if: steps.docker_secrets.outputs.has_secrets != 'true'
+        run: echo "::warning::docker-build-push skipped: configure DOCKER_USERNAME and DOCKER_PASSWORD repository secrets."
