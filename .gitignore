@@ -1,0 +1,13 @@
+# Secrets — never commit
+.env
+
+# Java build output
+**/target/
+
+# IDE
+.idea/
+*.iml
+*.class
+
+# Logs
+*.log

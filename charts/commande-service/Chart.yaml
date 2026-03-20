@@ -1,0 +1,6 @@
+apiVersion: v2
+name: commande-service
+description: Helm chart for commande-service
+version: 0.1.0
+appVersion: "1.0"
+type: application

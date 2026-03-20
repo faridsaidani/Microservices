@@ -1,0 +1,66 @@
+name: CD Helm on Self-Hosted Cluster
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        description: Kubernetes namespace
+        required: true
+        default: default
+      image_tag:
+        description: Docker image tag
+        required: true
+        default: latest
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check kubectl connectivity
+        run: kubectl get nodes
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Helm lint all charts
+        shell: bash
+        run: |
+          set -e
+          for chart in config-service discovery-service gateway-service catalogue-service commande-service paiement-service; do
+            helm lint ./charts/$chart
+          done
+
+      - name: Deploy in order with Helm
+        shell: bash
+        run: |
+          set -e
+          NS="${{ github.event.inputs.namespace }}"
+          TAG="${{ github.event.inputs.image_tag }}"
+          USER="${{ secrets.DOCKER_USERNAME }}"
+
+          helm upgrade --install config-service ./charts/config-service --namespace "$NS" --create-namespace \
+            --set image.repository="$USER/config-service" --set image.tag="$TAG" --set image.pullPolicy=IfNotPresent
+
+          helm upgrade --install discovery-service ./charts/discovery-service --namespace "$NS" --create-namespace \
+            --set image.repository="$USER/discovery-service" --set image.tag="$TAG" --set image.pullPolicy=IfNotPresent
+
+          helm upgrade --install gateway-service ./charts/gateway-service --namespace "$NS" --create-namespace \
+            --set image.repository="$USER/gateway-service" --set image.tag="$TAG" --set image.pullPolicy=IfNotPresent
+
+          helm upgrade --install catalogue-service ./charts/catalogue-service --namespace "$NS" --create-namespace \
+            --set image.repository="$USER/catalogue-service" --set image.tag="$TAG" --set image.pullPolicy=IfNotPresent
+
+          helm upgrade --install commande-service ./charts/commande-service --namespace "$NS" --create-namespace \
+            --set image.repository="$USER/commande-service" --set image.tag="$TAG" --set image.pullPolicy=IfNotPresent
+
+          helm upgrade --install paiement-service ./charts/paiement-service --namespace "$NS" --create-namespace \
+            --set image.repository="$USER/paiement-service" --set image.tag="$TAG" --set image.pullPolicy=IfNotPresent
+
+      - name: Post-deploy checks
+        run: |
+          kubectl get pods -n ${{ github.event.inputs.namespace }}
+          kubectl get services -n ${{ github.event.inputs.namespace }}
+          helm list -n ${{ github.event.inputs.namespace }}

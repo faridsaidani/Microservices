@@ -1,0 +1,42 @@
+replicaCount: 1
+
+image:
+  repository: paiement-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8083
+
+resources:
+  requests:
+    cpu: "200m"
+    memory: "384Mi"
+  limits:
+    cpu: "700m"
+    memory: "768Mi"
+
+probes:
+  liveness:
+    path: /actuator/health
+    initialDelaySeconds: 80
+    periodSeconds: 15
+  readiness:
+    path: /actuator/health
+    initialDelaySeconds: 45
+    periodSeconds: 10
+
+database:
+  name: paiement_db
+  username: postgres
+  password: postgres
+  storageSize: 1Gi
+  image: postgres:15-alpine
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
