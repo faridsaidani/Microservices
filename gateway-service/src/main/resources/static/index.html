@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Microservices Gateway</title>
+  <style>
+    :root {
+      --bg: #f4f7f8;
+      --surface: #ffffff;
+      --ink: #1c2a2f;
+      --muted: #5a7077;
+      --accent: #0f766e;
+      --accent-soft: #d9f3ef;
+      --border: #d7e3e7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #e7f7f4 0%, transparent 34%),
+        radial-gradient(circle at 88% 2%, #e9f2ff 0%, transparent 28%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 36px 18px 42px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 60%, #0d4b47 100%);
+      color: #f5fffd;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 14px 32px rgba(15, 118, 110, 0.25);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      letter-spacing: .3px;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: #d2f4ef;
+      line-height: 1.55;
+    }
+
+    .grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(17, 32, 39, 0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #17363d;
+    }
+
+    .card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: .95rem;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 4px;
+      text-decoration: none;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #bce5de;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .88rem;
+      font-weight: 600;
+    }
+
+    pre {
+      margin: 0;
+      padding: 12px;
+      border-radius: 10px;
+      background: #0f1c2c;
+      color: #d8efff;
+      overflow: auto;
+      font-size: .86rem;
+      border: 1px solid #223550;
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #f7fafb;
+      color: #314a52;
+      font-size: .92rem;
+    }
+
+    .footer {
+      margin-top: 14px;
+      color: #51676e;
+      font-size: .86rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Gateway Service is running</h1>
+      <p>
+        This is a lightweight landing page for the API gateway.
+        If you see this page, the gateway is reachable and healthy enough to serve static assets.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="API routes">
+      <article class="card">
+        <h2>Catalogue API</h2>
+        <p>Route through gateway to product endpoints.</p>
+        <a href="/api/v1/produits">GET /api/v1/produits</a>
+      </article>
+
+      <article class="card">
+        <h2>Commande API</h2>
+        <p>Route through gateway to order endpoints.</p>
+        <a href="/api/v1/commandes">GET /api/v1/commandes</a>
+      </article>
+
+      <article class="card">
+        <h2>Paiement API</h2>
+        <p>Route through gateway to payment endpoints.</p>
+        <a href="/api/v1/paiements">GET /api/v1/paiements</a>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <h2>Quick health checks</h2>
+      <p>Use these commands in a shell:</p>
+      <pre>curl http://localhost:8080/actuator/health
+curl http://localhost:8080/api/v1/produits
+curl http://localhost:8080/api/v1/commandes
+curl http://localhost:8080/api/v1/paiements</pre>
+      <div class="status">Tip: a 404 on route links can mean the downstream service has no data yet, not that the gateway is down.</div>
+      <p class="footer">Microservices TP - backend-first architecture</p>
+    </section>
+  </main>
+</body>
+</html>
