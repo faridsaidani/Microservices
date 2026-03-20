@@ -88,4 +88,5 @@ jobs:
 
       - name: Missing Docker Hub secrets
         if: steps.docker_secrets.outputs.has_secrets != 'true'
-        run: echo "::warning::docker-build-push skipped: configure DOCKER_USERNAME and DOCKER_PASSWORD repository secrets."
+        run: |
+          echo "::warning::docker-build-push skipped: configure DOCKER_USERNAME and DOCKER_PASSWORD repository secrets."
