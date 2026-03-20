@@ -23,10 +23,10 @@ jobs:
           - paiement-service
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -44,7 +44,7 @@ jobs:
 
   docker-build-push:
     needs: build-test
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -57,10 +57,10 @@ jobs:
           - paiement-service
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Login Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -70,3 +70,12 @@ jobs:
 
       - name: Push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
+
+  docker-secrets-missing:
+    needs: build-test
+    if: github.event_name == 'push' && (secrets.DOCKER_USERNAME == '' || secrets.DOCKER_PASSWORD == '')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Missing Docker Hub secrets
+        run: |
+          echo "::warning::docker-build-push skipped: configure DOCKER_USERNAME and DOCKER_PASSWORD repository secrets."
