@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Microservices Fullstack Demo</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Microservices E-Commerce</h1>
+      <p>Interface complete: Produits, Commandes, Paiements via Gateway.</p>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="produits">Produits</button>
+      <button class="tab" data-tab="commandes">Commandes</button>
+      <button class="tab" data-tab="paiements">Paiements</button>
+      <button class="tab" data-tab="health">Health</button>
+    </div>
+
+    <section id="produits" class="panel">
+      <div class="card">
+        <h3>Creer un produit</h3>
+        <div class="grid">
+          <div><label>Nom</label><input id="pNom" placeholder="Laptop"></div>
+          <div><label>Description</label><input id="pDesc" placeholder="Top spec"></div>
+          <div><label>Prix</label><input id="pPrix" type="number" step="0.01" placeholder="1299.99"></div>
+          <div><label>Stock</label><input id="pStock" type="number" placeholder="10"></div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="createProduit">Creer</button>
+          <button class="btn-soft" id="reloadProduits">Rafraichir</button>
+        </div>
+        <div id="produitMsg" class="msg hidden"></div>
+      </div>
+
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Nom</th><th>Description</th><th>Prix</th><th>Stock</th></tr></thead>
+          <tbody id="produitsRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="commandes" class="panel hidden">
+      <div class="card">
+        <h3>Creer une commande</h3>
+        <div class="grid">
+          <div><label>Produit ID</label><input id="cProduitId" type="number" placeholder="1"></div>
+          <div><label>Quantite</label><input id="cQuantite" type="number" placeholder="2"></div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="createCommande">Creer</button>
+          <button class="btn-soft" id="reloadCommandes">Rafraichir</button>
+        </div>
+        <div id="commandeMsg" class="msg hidden"></div>
+      </div>
+
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Date</th><th>Statut</th><th>Montant</th><th>Lignes</th></tr></thead>
+          <tbody id="commandesRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="paiements" class="panel hidden">
+      <div class="card">
+        <h3>Creer un paiement</h3>
+        <div class="grid">
+          <div><label>Commande ID</label><input id="payCommandeId" type="number" placeholder="1"></div>
+          <div>
+            <label>Mode</label>
+            <select id="payMode">
+              <option>CARTE_BANCAIRE</option>
+              <option>VIREMENT</option>
+              <option>PAYPAL</option>
+              <option>ESPECES</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="createPaiement">Creer</button>
+          <button class="btn-soft" id="reloadPaiements">Rafraichir</button>
+        </div>
+        <div id="paiementMsg" class="msg hidden"></div>
+      </div>
+
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Commande</th><th>Montant</th><th>Mode</th><th>Statut</th><th>Date</th></tr></thead>
+          <tbody id="paiementsRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="health" class="panel hidden">
+      <div class="card">
+        <h3>Etat du gateway</h3>
+        <div class="actions">
+          <button class="btn-primary" id="checkHealth">Verifier</button>
+        </div>
+        <pre id="healthOutput">Clique sur Verifier</pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
